@@ -31,5 +31,25 @@ class SortLib {
         }
         return $arr;
     }
-
+    static function quickSort($arr)
+    {
+        if(count($arr) <= 1){
+            return $arr;
+        }
+        else{
+            $pivot = $arr[0];
+            $left = array();
+            $right = array();
+            for($i = 1; $i < count($arr); $i++)
+            {
+                if($arr[$i] < $pivot){
+                    $left[] = $arr[$i];
+                }
+                else{
+                    $right[] = $arr[$i];
+                }
+            }
+            return array_merge(self::quickSort($left), array($pivot), self::quickSort($right));
+        }
+    }
 }
