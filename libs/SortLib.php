@@ -1,7 +1,9 @@
 <?php
 
+namespace libs;
+
 class SortLib {
-    static function insertionSort($arr){
+    static function InsertionSort($arr){
         for ($i = 0; $i < count($arr); $i++) {
             $currentValue = $arr[$i];
             $prevIndex = $i - 1;
@@ -14,7 +16,7 @@ class SortLib {
         return $arr;
     }
 
-    static function bubbleSort($arr) {
+    static function BubbleSort($arr) {
         for ($i = 0; $i < count($arr); $i++) {
             $hasSwapped = false;
             for ($j = 0; $j < count($arr) - $i - 1; $j++) {
@@ -31,7 +33,7 @@ class SortLib {
         }
         return $arr;
     }
-    static function quickSort($arr)
+    static function QuickSort($arr)
     {
         if(count($arr) <= 1){
             return $arr;
@@ -49,7 +51,7 @@ class SortLib {
                     $right[] = $arr[$i];
                 }
             }
-            return array_merge(self::quickSort($left), array($pivot), self::quickSort($right));
+            return array_merge(self::QuickSort($left), array($pivot), self::QuickSort($right));
         }
     }
 }
