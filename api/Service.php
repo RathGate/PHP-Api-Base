@@ -18,7 +18,8 @@ abstract class Service {
 
         // Récupère, traite et vérifie les paramètres
         $this::SetParameters();
-        // Todo: séparé de SetParameters mais peut certainement être factorisé en une fonction.
+        // Todo: séparé de SetParameters mais peut certainement être factorisé en une fonction,
+        // Todo: mais je ne pense pas savoir comment faire.
         $this->CheckParameters();
         // Si aucune erreur n'a été détectée, lance l'exécution du service en lui-même.
         $this->Trig();
@@ -26,6 +27,7 @@ abstract class Service {
 
     abstract function Trig();
 
+    // Retourne true si la REQUEST_METHOD est présente dans les allowedMethods
     public function IsValidMethod(): bool
     {
         return in_array($_SERVER["REQUEST_METHOD"], $this->allowedVerbs);
@@ -41,6 +43,9 @@ abstract class Service {
             $this->params->$param = json_decode($_GET[$param]);
         }
     }
+
+    // Fonction à déclarer dans les classes enfant pour vérifier les paramètres et valeurs
+    // spécifiques au service en question.
     public abstract function CheckParameters();
 
 }
