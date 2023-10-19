@@ -1,6 +1,8 @@
 <?php
 
 class SortLib {
+    public static $defaultFunc = "insertionsort";
+
     static function insertionSort($arr){
         for ($i = 0; $i < count($arr); $i++) {
             $currentValue = $arr[$i];

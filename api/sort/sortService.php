@@ -13,12 +13,9 @@ class SortService extends Service {
     // Surcharge Service.__construct() pour ajouter le traitement spécifique de la requête.
     public function __construct()
     {
-        // Récupère le nom de l'endpoint (.../{endpoint}/index.php)
-        preg_match("/^.*\/(?P<folder_name>.+)\/.+\.php$/", $_SERVER["PHP_SELF"], $matches);
-
         // Attribue la valeur des attributs
         // Todo: Peut-être qu'il faudrait vérifier ici s'ils sont invalides
-        $this->sortFunc = $matches["folder_name"] ?? false;
+        $this->sortFunc = $_GET["f"] ?? SortLib::$defaultFunc;
         $this->arrQuery = json_decode($_GET["q"] ?? false);
 
         parent::__construct();
@@ -28,24 +25,21 @@ class SortService extends Service {
     {
         // Vérification de base des attributs et du verbe de la requête
         if (!$this->sortFunc || $_SERVER["REQUEST_METHOD"] !== "GET" || !$this->arrQuery) {
-            echo $this->arrQuery;
             header("HTTP/1.0 400 Bad Request");
             return;
         }
 
-        // Protection supplémentaire dans le cas où la fonction associée à l'endpoint
-        // n'existe pas dans sortLib et lancerait une erreur.
-        // Todo: Préciser l'exception au lieu de faire un catch généraliste ? Ou pas ?
-        try {
-            $sortedArr = SortLib::{$this->sortFunc}($this->arrQuery);
-            $response = ApiLib::successResponse(array("sort_function"=>$this->sortFunc, "sorted_arr"=>$sortedArr));
-            header('Content-Type: application/json');
-        } catch (Exception $e) {
-            $response = ApiLib::errorResponse(400, $e);
+        // Vérification de l'existence de la fonction dans la librairie.
+        if (!method_exists(SortLib::class, $this->sortFunc)) {
+            $response = ApiLib::errorResponse(400, "La fonction de tri spécifiée est invalide.");
+            echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             header("HTTP/1.0 400 Bad Request");
+            return;
         }
 
-        // Renvoie la réponse, succès ou échec
+        $sortedArr = SortLib::{$this->sortFunc}($this->arrQuery);
+        $response = ApiLib::successResponse(array("sort_function"=>$this->sortFunc, "sorted_arr"=>$sortedArr));
         echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        header('Content-Type: application/json');
     }
 }
