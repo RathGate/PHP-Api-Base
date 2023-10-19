@@ -4,8 +4,9 @@ Cet exercice propose une implémentation orientée service d'une API permettant 
 
 Trois versions de cette API ont été construites pour tenter de jauger les avantages et les inconvénients de chacune, trouvables sur la [page github](https://github.com/RathGate/corbel_b2_php_tp1) du projet.
 
-La version `main`, celle de ce rendu, cherche à implémenter les dernières pistes d'amélioration abordées en cours ainsi qu'une totale gestion des erreurs, un autoloader manuel fonctionnel et une architecture permettant à l'utilisateur de modifier l'API "facilement".
+La version `main` définitive, celle de ce rendu, cherche à implémenter les dernières pistes d'amélioration abordées en cours ainsi qu'une totale gestion des erreurs, un autoloader manuel fonctionnel et une architecture permettant à l'utilisateur de modifier l'API "facilement".
 
+La version `former_version` contient une trace de l'API telle qu'elle était au midi du 19/10 (même architecture, sans "l'optimisation" des classes services) et la version `single_endpoint` implémente l'API en utilisant `/api/sort/` en guise de seul endpoint.
 ## Spécifications techniques
 
 La totalité de l'API a été réalisée en **PHP 7.3**.
@@ -20,7 +21,7 @@ La totalité de l'API a été réalisée en **PHP 7.3**.
 
 L'API est téléchargeable par le rendu moodle, ou en tapant dans un terminal:
 
-    git clone https://github.com/RathGate/corbel_b2_tp1.git
+    git clone https://github.com/RathGate/corbel_b2_php_tp1.git
 
 Il revient à l'utilisateur de placer le contenu du dossier du projet dans le dossier du serveur web utilisé (par exemple le dossier `www` pour WAMP ou `htdocs` pour XAMPP).
 
@@ -40,7 +41,7 @@ Les trois endpoints implémentés nativement trient et retournent une liste d'é
 |------------|--------|-------|--------------------------------------------|
 | arr        | oui    | Array | Contient le tableau à trier au format JSON |
 
-*Exemple:* `http://localhost/corbel_b2_tp1/api/sort/insertionsort/?arr=[-1,7,8,5]`
+*Exemple:* `http://localhost/corbel_b2_php_tp1/api/sort/insertionsort/?arr=[-1,7,8,5]`
 
 #### Response
 Retourne les éléments sous le format JSON suivant :
