@@ -28,7 +28,7 @@ class SortService extends Service {
     function Trig(): void
     {
         // Vérification de base des attributs et du verbe de la requête
-        if ($_SERVER["REQUEST_METHOD"] !== "GET" || !$this->queryArr) {
+        if ($_SERVER["REQUEST_METHOD"] !== "GET" || !$this->queryArr || !is_array($this->queryArr)) {
             header("HTTP/1.0 400 Bad Request");
             return;
         }
