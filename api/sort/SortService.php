@@ -1,8 +1,10 @@
 <?php
+namespace api\sort;
+require_once __DIR__."/../../autoload.php";
 
-require_once __DIR__ . "/../../libs/sortLib.php";
-require_once __DIR__ . "/../../libs/apiLib.php";
-require_once __DIR__."/../service.php";
+use api\Service;
+use libs\ApiLib;
+use libs\SortLib;
 
 class SortService extends Service {
 
@@ -20,11 +22,8 @@ class SortService extends Service {
         $sortedArr = SortLib::{$this->params->sortFunc}($this->params->arr);
 
         // Ecrit le json de la réponse et l'envoie
-        $response = ApiLib::successResponse(array("sort_function"=>$this->params->sortFunc, "sorted_arr"=>$sortedArr));
-        header('Content-Type: application/json');
-
-        echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-    }
+        ApiLib::WriteResponse(array("sort_function"=>$this->params->sortFunc, "sorted_arr"=>$sortedArr));
+}
 
     // Surcharge Service::SetParameters() pour y ajouter le nom de la fonction de tri à utiliser,
     // récupérée depuis l'URI de la requête.
@@ -43,17 +42,11 @@ class SortService extends Service {
     {
         // La méthode associée à l'endpoint n'existe pas
         if (!method_exists(SortLib::class, $this->params->sortFunc)) {
-            $response = ApiLib::errorResponse(500, "Aucune fonction de tri associée à `".$this->params->sortFunc."`.");
-            header("HTTP/1.0 500 Internal Server Error");
-            echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            exit;
+            ApiLib::WriteErrorResponse(500, "Aucune fonction de tri associée à `".$this->params->sortFunc."`.");
         }
         // Le type du paramètre est invalide
         if (!is_array($this->params->arr)) {
-            $response = ApiLib::errorResponse(400, "Le paramètre `arr` doit être de type array.");
-            header("HTTP/1.0 400 Bad Request");
-            echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            exit;
+            ApiLib::WriteErrorResponse(400, "Le paramètre `arr` doit être de type array.");
         }
     }
 }

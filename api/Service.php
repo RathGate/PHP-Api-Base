@@ -1,4 +1,9 @@
 <?php
+
+namespace api;
+require_once __DIR__."/../autoload.php";
+use libs\ApiLib;
+
 abstract class Service {
     protected $allowedVerbs = [];
     protected $requiredParams = [];
@@ -8,10 +13,7 @@ abstract class Service {
     {
         // Vérifie le verbe de la requête
         if (!self::IsValidMethod()) {
-            $response = ApiLib::errorResponse(405, "Méthode ".$_SERVER["REQUEST_METHOD"]." non autorisée.");
-            header("HTTP/1.0 405 Method Not Allowed");
-            echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-            exit;
+            ApiLib::WriteErrorResponse(405, "Méthode ".$_SERVER["REQUEST_METHOD"]." non autorisée.");
         }
 
         // Récupère, traite et vérifie les paramètres
@@ -31,13 +33,10 @@ abstract class Service {
 
     // Enregistre les paramètres dans l'object $this->params.
     public function SetParameters(): void {
-        $this->params = new stdClass();
+        $this->params = new \stdClass();
         foreach ($this->requiredParams as $param) {
             if (!isset($_GET[$param])) {
-                $response = ApiLib::errorResponse(405, "Paramètre obligatoire `".$param."` manquant.");
-                header("HTTP/1.0 400 Bad Request");
-                echo stripslashes(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-                exit;
+                ApiLib::WriteErrorResponse(400, "Paramètre obligatoire `".$param."` manquant.");
             }
             $this->params->$param = json_decode($_GET[$param]);
         }
